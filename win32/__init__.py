@@ -29,9 +29,9 @@ def enum_child_window(hwnd):
     return child_hwnd_list
 
 
-def send_message(hwnd, code):
-    win32gui.SendMessage(hwnd, win32con.WM_KEYDOWN, code, 0)
-    win32gui.SendMessage(hwnd, win32con.WM_KEYUP, code, 0)
+def post_message(hwnd, code):
+    win32gui.PostMessage(hwnd, win32con.WM_KEYDOWN, code, 0)
+    win32gui.PostMessage(hwnd, win32con.WM_KEYUP, code, 0)
 
 
 class Window:
@@ -39,7 +39,7 @@ class Window:
 
     def __init__(self):
         self.hwnd_list = search_window(config['window']['title'])
-        logger.info('Found %d window' % len(self.hwnd_list))
+        logger.info('found %d window' % len(self.hwnd_list))
 
     # https://stackoverflow.com/questions/53778227
 
@@ -58,7 +58,8 @@ class Window:
         if not self.hwnd_list:
             return
         for i in self.hwnd_list:
-            send_message(i, code)
+            post_message(i, code)
+            logger.info('sent code 0x%02x to window %d' % (code, i))
 
 
 if __name__ == "__main__":

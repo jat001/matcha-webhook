@@ -1,6 +1,5 @@
 from sanic import Blueprint
 
-
 from .fishing import fish
 
 

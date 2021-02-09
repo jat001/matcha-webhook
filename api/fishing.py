@@ -11,8 +11,11 @@ fish = Blueprint('fishing', url_prefix='/fishing')
 @fish.route('/fish_bite', methods=['POST'])
 async def fish_bite(request):
     logger.info(request.json)
+
     if request.json.get('event') != 'FishBite':
         return json({'status': 'error'})
-    fishing = Fishing()
-    await fishing.fish_bite()
+
+    data_type = request.json.get('data', {}).get('type', 1)
+    await Fishing(data_type).fish_bite()
+
     return json({'status': 'success'})

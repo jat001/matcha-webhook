@@ -1,12 +1,44 @@
+from time import time
 from asyncio import sleep
+from sanic.log import logger
 
 from . import Window
 
 
+patience_start_time = None
+
+
 class Fishing(Window):
 
+    def __init__(self, data_type):
+        super().__init__()
+        self.key_binding = self.config['fishing']['key_binding']
+        self.data_type = data_type
+
     async def fish_bite(self):
+        # TODO: global variable sucks
+        global patience_start_time
         await sleep(0.2)
-        self.post_message(self.config['key_binding']['fishing']['hook'])
+
+        hookset_key = self.key_binding.get('precision_hookset', self.key_binding['hook']) if self.data_type == 1 \
+            else self.key_binding.get('powerful_hookset', self.key_binding['hook'])
+        self.post_message(hookset_key)
+        # press the hook button anyway to prevent precision_hookset or powerful_hookset not working
+        self.post_message(self.key_binding['hook'])
+
         await sleep(10)
-        self.post_message(self.config['key_binding']['fishing']['cast'])
+        if self.key_binding.get('patience') and self.config['fishing'].get('patience_timeout'):
+            if not patience_start_time or \
+                    time() - patience_start_time >= self.config['fishing']['patience_timeout']:
+                self.post_message(self.key_binding['patience'])
+                patience_start_time = time()
+                logger.info('patience started, timeout %ds' % self.config['fishing']['patience_timeout'])
+                await sleep(1)
+
+        n = 0
+        # TODO: find a way to test when the fish landing
+        while n < 5:
+            n += 1
+            logger.info('%dth cast' % n)
+            self.post_message(self.key_binding['cast'])
+            await sleep(2)

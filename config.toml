@@ -1,6 +1,12 @@
 [window]
-title = '最终幻想XIV'
+title = '最终幻想XIV' # 窗口标题
 
-[key_binding.fishing]
-cast = 0x31
-hook = 0x32
+[fishing]
+patience_timeout = 60 # 耐心持续时间（秒）
+
+[fishing.key_binding]
+cast = 0x31 # 抛竿
+hook = 0x32 # 提钩
+patience = 0x51 # 耐心
+precision_hookset = 0x33 # 精准提钩
+powerful_hookset = 0x34 # 精准提钩
