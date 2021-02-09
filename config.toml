@@ -5,8 +5,8 @@ title = '最终幻想XIV' # 窗口标题
 patience_timeout = 60 # 耐心持续时间（秒）
 
 [fishing.key_binding]
-cast = 0x31 # 抛竿
-hook = 0x32 # 提钩
-patience = 0x51 # 耐心
-precision_hookset = 0x33 # 精准提钩
-powerful_hookset = 0x34 # 精准提钩
+cast = '1' # 抛竿 キャスティング
+hook = '2' # 提钩 フッキング
+patience = 'Q' # 耐心 ペーシェンス
+precision_hookset = '3' # 精准提钩 プレシジョンフッキング
+powerful_hookset = '4' # 强力提钩 ストロングフッキング
