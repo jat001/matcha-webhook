@@ -1,0 +1,6 @@
+[window]
+title = '最终幻想XIV'
+
+[key_binding.fishing]
+cast = 0x31
+hook = 0x32
