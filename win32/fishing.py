@@ -2,7 +2,7 @@ from time import time
 from asyncio import sleep
 from sanic.log import logger
 
-from . import Window
+from . import Window, has_window
 
 
 patience_start_time = None
@@ -10,17 +10,17 @@ patience_start_time = None
 
 class Fishing(Window):
 
-    def __init__(self, data_type):
+    def __init__(self):
         super().__init__()
         self.key_binding = self.config['fishing']['key_binding']
-        self.data_type = data_type
 
-    async def fish_bite(self):
+    @has_window
+    async def fish_bite(self, data_type):
         # TODO: global variable sucks
         global patience_start_time
         await sleep(0.2)
 
-        hookset_key = self.key_binding.get('precision_hookset', self.key_binding['hook']) if self.data_type == 1 \
+        hookset_key = self.key_binding.get('precision_hookset', self.key_binding['hook']) if data_type == 1 \
             else self.key_binding.get('powerful_hookset', self.key_binding['hook'])
         self.post_message(hookset_key)
         # press the hook button anyway to prevent precision_hookset or powerful_hookset not working

@@ -1,6 +1,8 @@
 import win32gui
 import win32con
 from sanic.log import logger
+from functools import wraps
+from asyncio import iscoroutinefunction
 
 from config import config
 
@@ -34,6 +36,23 @@ def post_message(hwnd, code):
     win32gui.PostMessage(hwnd, win32con.WM_KEYUP, code, 0)
 
 
+# TODO: fuck me, really ugly, isn't it?
+async def _magic(*_, **__):
+    pass
+
+
+def has_window(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if self.hwnd_list:
+            return func(self, *args, **kwargs)
+
+        if iscoroutinefunction(func):
+            return _magic(self, *args, **kwargs)
+
+    return wrapper
+
+
 class Window:
     config = config
 
@@ -54,9 +73,8 @@ class Window:
 
     # There is no way to automatically detect which window is handling the message.
     # We have to test it manually. But for most games, they have only one window.
+    @has_window
     def post_message(self, code):
-        if not self.hwnd_list:
-            return
         for i in self.hwnd_list:
             post_message(i, code)
             logger.info('sent code 0x%02x to window %d' % (code, i))

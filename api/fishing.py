@@ -16,6 +16,6 @@ async def fish_bite(request):
         return json({'status': 'error'})
 
     data_type = request.json.get('data', {}).get('type', 1)
-    await Fishing(data_type).fish_bite()
+    await Fishing().fish_bite(data_type)
 
     return json({'status': 'success'})
